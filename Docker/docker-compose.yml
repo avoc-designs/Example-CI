@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+    sonarqube:
+        image: sonarqube:9.0.0-community
+        depends_on:
+            - db
+        ports:
+            # Public:Private
+            - "9009:9000"
+        networks:
+            - sonarnet
+        environment:
+            - sonarqube.jdbc.url=jdbc:postgresql://db:5432/sonar
+            # We can add login and pass
+            # - sonarqube.jdbc.login=key
+            # - sonarqube-jbdc.password=password
+        volumes:
+            - ./sonarx/sonarqube_data:/opt/sonarqube/data
+            - ./sonarx/sonarqube_extensions:/opt/sonarqube/extensions
+            - ./sonarx/sonarqube_logs:/opt/sonarqube/logs
+            - ./sonarx/sonarqube_temp:/opt/sonarqube/temp
+    db:
+        image: postgres:13-alpine
+        networks:
+            - sonarnet
+        environment:
+            POSTGRES_USER: sonar
+            POSTGRES_PASSWORD: sonar
+        volumes:
+            - ./dbx/postgresql:/var/lib/postgresql
+            - ./dbx/postgresql_data:/var/lib/postgresql/data    
+    jenkins:
+        image: jenkins/jenkins:lts
+        volumes:
+           - ./jenkinsx/jenkins_data:/var/jenkins_home
+        networks:
+            - sonarnet
+        ports:
+            - '8080:8080'
+            - '50000:50000'
+            
+networks:
+  sonarnet:
+    driver: bridge
+
+volumes:
+    sonarqube_data:
+    sonarqube_extensions:
+    sonarqube_logs:
+    sonarqube_temp:
+    postgresql:
+    postgresql_data:
+    jenkins_data:

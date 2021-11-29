@@ -1,0 +1,42 @@
+/* 
+
+    We can do an simple scripted pipeline
+    with node using the Jenkins webUI
+
+    ✓ Groovy
+*/
+
+node {
+    stage('Stage One') {
+        echo 'Hello world'
+    }
+}
+
+/*  
+
+    We can also use the declarative form 
+    that facilitates the writing of the pipeline
+
+    We can write the pipeline using declarations
+
+    ✗ Groovy
+
+*/
+
+pipeline {
+
+    agent any
+
+    stages {
+        stage('Declarative form includes: Steps') {
+            steps {
+                echo 'Welcome to QA Team!'
+            }
+        }
+        stage('You can run other tasks') {
+            steps {
+                echo 'You can run something here!'
+            }
+        }
+    }
+}
