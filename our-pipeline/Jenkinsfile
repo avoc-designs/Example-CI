@@ -11,26 +11,6 @@ pipeline{
             steps{
                 echo "running sonar-scanner..."
             }
-            post{
-                /* Used normally */
-                always{
-                    echo "Something will be placed that you want to always happen in this step"
-                }
-                success{
-                    echo "Put in this block will happen only if the result of the step does not have any errors"
-                }
-                failure{
-                    echo "Will launch whatever if the test result gives an error"
-                }
-                /* Others */
-                unstable {
-                    echo 'This will run only if the run was marked as unstable'
-                }
-                changed {
-                    echo 'This will run only if the state of the Pipeline has changed'
-                    echo 'For example, if the Pipeline was previously failing but is now successful'
-                }
-            }
         }
 
         stage("Quality Gates"){
@@ -38,18 +18,12 @@ pipeline{
                 sleep(60) // Should wait aprox. 1 minute
                 echo "Waiting for Sonnar Scanner results and verify Quality Gates"
             }
-            /* ...posts { ...If necessary} */
         }
 
         stage("Postman - Newman"){
             steps{
                 sleep(60) // Should wait aprox. 1 minute
                 echo "The tests will be run in postman newman"
-            }
-            post {
-                failure{
-                    echo "Generate a report"
-                }
             }
         }
 
@@ -58,22 +32,12 @@ pipeline{
                 sleep(60) // Should wait aprox. 1 minute
                 echo "The tests will be run in cypress"
             }
-            post{
-                failure{
-                    echo "Generate a report"
-                }
-            }
         }
 
         stage("Jmeter"){
             steps{
                 sleep(60) // Should wait aprox. 1 minute
                 echo "Will run load and stress tests in JMeter"
-            }
-            post {
-                failure{
-                    echo "Generate a report"
-                }
             }
         }
     }
